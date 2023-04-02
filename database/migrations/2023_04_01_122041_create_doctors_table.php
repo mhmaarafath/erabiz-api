@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('degree')->nullable();
             $table->string('chamber')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

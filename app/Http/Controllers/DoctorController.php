@@ -3,83 +3,124 @@
 namespace App\Http\Controllers;
 
 use App\Models\Doctor;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
+use Illuminate\Validation\ValidationException;
+use PhpParser\Comment\Doc;
 
 class DoctorController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $doctors = Doctor::all();
+        return responseJson('', [
+           'data' => $doctors,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        $rules = [
+            'name' => ['required'],
+            'speciality_id' => [
+                'required',
+                Rule::exists('specialities', 'id'),
+            ],
+            'avatar' => [
+                'sometimes',
+                File::image(),
+            ],
+            'degree' => ['required'],
+            'chamber' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        $validator->validate();
+
+        $validated = $validator->safe()->all();
+
+        Doctor::create($validated);
+
+        return responseJson('data added successfully');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Doctor  $doctor
-     * @return \Illuminate\Http\Response
+     * @param Doctor $doctor
+     * @return JsonResponse
      */
-    public function show(Doctor $doctor)
+    public function show(Doctor $doctor): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Doctor  $doctor
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Doctor $doctor)
-    {
-        //
+        return responseJson('', [
+           'data' => $doctor,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Doctor  $doctor
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Doctor $doctor
+     * @return JsonResponse
+     * @throws ValidationException
      */
-    public function update(Request $request, Doctor $doctor)
+    public function update(Request $request, Doctor $doctor): JsonResponse
     {
-        //
+        $rules = [
+            'name' => ['sometimes', 'required'],
+            'speciality_id' => [
+                'sometimes',
+                'required',
+                Rule::exists('specialities', 'id'),
+            ],
+            'avatar' => [
+                'sometimes',
+                File::image(),
+            ],
+            'degree' => ['sometimes', 'required'],
+            'chamber' => ['sometimes', 'required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        $validator->validate();
+
+        $validated = $validator->safe()->all();
+
+        $doctor->update($validated);
+
+        return responseJson('data edited successfully');
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Doctor  $doctor
-     * @return \Illuminate\Http\Response
+     * @param Doctor $doctor
+     * @return JsonResponse
      */
-    public function destroy(Doctor $doctor)
+    public function destroy(Doctor $doctor): JsonResponse
     {
-        //
+        $doctor->delete();
+
+        return responseJson('data deleted successfully');
+
     }
 }
