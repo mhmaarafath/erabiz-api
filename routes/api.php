@@ -19,6 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('specialities', \App\Http\Controllers\SpecialityController::class);
+Route::apiResource('hospitals', \App\Http\Controllers\HospitalController::class);
 Route::apiResource('doctors', \App\Http\Controllers\DoctorController::class);
 Route::apiResource('countries', \App\Http\Controllers\CountryController::class)->only('index', 'show');
 
