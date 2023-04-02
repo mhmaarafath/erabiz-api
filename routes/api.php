@@ -22,4 +22,4 @@ Route::apiResource('specialities', \App\Http\Controllers\SpecialityController::c
 Route::apiResource('hospitals', \App\Http\Controllers\HospitalController::class);
 Route::apiResource('doctors', \App\Http\Controllers\DoctorController::class);
 Route::apiResource('countries', \App\Http\Controllers\CountryController::class)->only('index', 'show');
-
+Route::apiResource('schedules', \App\Http\Controllers\ScheduleController::class);
