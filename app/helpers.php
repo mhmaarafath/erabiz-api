@@ -23,9 +23,9 @@ function storeImage($path, $file)
 
 function image($path){
     if($path){
-        return config('app.url')."/".str_replace('public/', '', $path);
+        return config('app.url')."/".str_replace('public/', 'storage/', $path);
     }
 
-    return config('app.url')."/avatar.jpeg";
+    return config('app.url')."/storage/avatar.jpeg";
 }
 
