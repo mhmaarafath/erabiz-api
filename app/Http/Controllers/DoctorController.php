@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Doctor;
+use App\Models\Speciality;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -20,9 +21,10 @@ class DoctorController extends Controller
      */
     public function index(): JsonResponse
     {
-        $doctors = Doctor::all();
+        $doctors = Doctor::with('speciality')->get();
         return responseJson('', [
-           'data' => $doctors,
+            'doctors' => $doctors,
+            'specialities' => Speciality::all(),
         ]);
     }
 
@@ -53,7 +55,13 @@ class DoctorController extends Controller
 
         $validator->validate();
 
-        $validated = $validator->safe()->all();
+        $validated = $validator->safe()->except('avatar');
+
+        if($request->hasFile('avatar')){
+            $file = $request->file('avatar');
+            $validated['avatar'] = storeImage('avatar', $file);
+        }
+
 
         Doctor::create($validated);
 
@@ -69,7 +77,7 @@ class DoctorController extends Controller
     public function show(Doctor $doctor): JsonResponse
     {
         return responseJson('', [
-           'data' => $doctor,
+           'doctor' => $doctor,
         ]);
     }
 
@@ -102,7 +110,13 @@ class DoctorController extends Controller
 
         $validator->validate();
 
-        $validated = $validator->safe()->all();
+        $validated = $validator->safe()->except('avatar');
+
+        if($request->hasFile('avatar')){
+            $file = $request->file('avatar');
+            $validated['avatar'] = storeImage('avatar', $file);
+        }
+
 
         $doctor->update($validated);
 

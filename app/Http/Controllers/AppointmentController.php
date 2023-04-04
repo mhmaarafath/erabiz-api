@@ -48,8 +48,6 @@ class AppointmentController extends Controller
             'name' => [
                 'required',
             ],
-//            TODO
-//            A phone number 1 time per schedule
 
             'phone' => [
                 'required',
@@ -63,7 +61,7 @@ class AppointmentController extends Controller
 
             if (!$schedule->appointmentsFor($request->date)) {
                 $validator->errors()->add(
-                    'date', 'no appointments available!'
+                    'date', 'No appointments available!'
                 );
             }
         });
@@ -73,9 +71,15 @@ class AppointmentController extends Controller
 
         $validated = $validator->safe()->all();
 
-        Appointment::create($validated);
+        $appointment = Appointment::create($validated);
 
-        return responseJson('data added successfully');
+        $appointment['number'] = Appointment::where('date', $validated['date'])->count();
+
+        $appointment['time'] = Carbon::createFromFormat('Y-m-d H:i:s', "{$appointment->date} {$appointment->schedule->start}")->addMinutes($appointment->schedule->duration * ($appointment['number']-1))->toTimeString();
+
+        return responseJson('data added successfully', [
+            'data' => $appointment,
+        ]);
 
     }
 

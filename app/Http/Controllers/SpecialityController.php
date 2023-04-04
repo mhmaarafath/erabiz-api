@@ -19,7 +19,7 @@ class SpecialityController extends Controller
     {
         $specialities = Speciality::all();
         return responseJson('', [
-            'data' => $specialities,
+            'specialities' => $specialities,
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Doctor;
 use App\Models\Hospital;
 use App\Models\Schedule;
 use Illuminate\Http\JsonResponse;
@@ -19,10 +20,12 @@ class ScheduleController extends Controller
      */
     public function index(): JsonResponse
     {
-        $schedules = Schedule::all();
+        $schedules = Schedule::withWhereHas('hospital')->withWhereHas('doctor')->get();
 
         return responseJson('', [
-           'data' => $schedules,
+           'schedules' => $schedules,
+            'doctors' => Doctor::all(),
+            'hospitals' => Hospital::all(),
         ]);
     }
 

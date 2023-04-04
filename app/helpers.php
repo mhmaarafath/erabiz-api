@@ -15,3 +15,17 @@ function responseJson($message, $optional = []): \Illuminate\Http\JsonResponse
     }
     return response()->json($array);
 }
+
+function storeImage($path, $file)
+{
+    return \Illuminate\Support\Facades\Storage::put("public/$path", $file);
+}
+
+function image($path){
+    if($path){
+        return config('app.url')."/".str_replace('public/', '', $path);
+    }
+
+    return config('app.url')."/avatar.jpeg";
+}
+
