@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Country;
+use App\Models\Doctor;
+use App\Models\Hospital;
+use App\Models\Speciality;
 use App\Models\State;
 use Illuminate\Database\Seeder;
 
@@ -16,13 +19,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
         $json = file_get_contents(public_path('countries.json'));
         $data = json_decode($json);
 
@@ -44,6 +40,22 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        $specialities = [
+            'Allergists',
+            'Anesthesiologists',
+            'Cardiologists',
+            'Dermatologists',
+            'Endocrinologists',
+        ];
 
+        foreach ($specialities as $speciality){
+            Speciality::factory()->create([
+                'name' => $speciality,
+            ]);
+        }
+
+        Doctor::factory(15)->create();
+
+        Hospital::factory(15)->create();
     }
 }

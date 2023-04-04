@@ -17,7 +17,8 @@ class HospitalFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => $this->faker->company(),
+            'state_id' => $this->faker->numberBetween(2800, 2803)
         ];
     }
 }

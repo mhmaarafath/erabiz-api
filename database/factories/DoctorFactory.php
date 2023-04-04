@@ -17,7 +17,10 @@ class DoctorFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => $this->faker->name,
+            'speciality_id' => $this->faker->numberBetween(1, 5,),
+            'degree' => $this->faker->word(2),
+            'chamber' => $this->faker->sentence,
         ];
     }
 }

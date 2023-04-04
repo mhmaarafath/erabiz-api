@@ -17,7 +17,6 @@ class SpecialityFactory extends Factory
     public function definition()
     {
         return [
-            //
         ];
     }
 }
