@@ -20,7 +20,7 @@ class AppointmentController extends Controller
      */
     public function index(): JsonResponse
     {
-        $appointments = Appointment::all();
+        $appointments = Appointment::with(['schedule.hospital.state', 'schedule.doctor'])->get();
         return responseJson('', [
             'data' => $appointments,
         ]);

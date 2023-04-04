@@ -23,7 +23,7 @@ class ScheduleController extends Controller
         $schedules = Schedule::withWhereHas('hospital')->withWhereHas('doctor')->get();
 
         return responseJson('', [
-           'schedules' => $schedules,
+            'schedules' => $schedules,
             'doctors' => Doctor::all(),
             'hospitals' => Hospital::all(),
         ]);
